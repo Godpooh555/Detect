@@ -5,9 +5,41 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 from io import BytesIO
+import gdown
+import zipfile
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+detection_model_zip_url = "https://drive.google.com/uc?id=10-uFlRCIz6_Hxe3bR6RN-D-xt59VRLvz"
+grad_cam_model_zip_url = "https://drive.google.com/uc?id=1TM3PQpj6W1iytuC9H53vjJ8Rk9qKocgX"
+
+detection_model_zip_path = "model_12.zip"
+grad_cam_model_zip_path = "model_09.zip"
+detection_model_path = "model_12.keras"
+grad_cam_model_path = "model_09.h5"
+
+def download_file(url, output_path):
+    if not os.path.exists(output_path):
+        gdown.download(url, output_path, quiet=False)
+
+def extract_zip(zip_path, extract_to):
+    if not os.path.exists(extract_to):
+        print(f"Extracting {zip_path}...")
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall("./")
+        print("Extracted files:", os.listdir("./"))
+
+download_file(detection_model_zip_url, detection_model_zip_path)
+extract_zip(detection_model_zip_path, detection_model_path)
+
+download_file(grad_cam_model_zip_url, grad_cam_model_zip_path)
+extract_zip(grad_cam_model_zip_path, grad_cam_model_path)
+
+if not os.path.exists(detection_model_path):
+    print(f"Error: {detection_model_path} not found!")
+    print("Files in directory:", os.listdir("./"))
+    exit()
 
 detection_model_path = "model_12.keras"
 grad_cam_model_path = "model_09.h5"
