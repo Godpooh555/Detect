@@ -13,6 +13,7 @@ detection_model_path = "model_12.keras"
 grad_cam_model_path = "model_09.h5"
 
 if not os.path.exists(detection_model_path) or not os.path.exists(grad_cam_model_path):
+    print(f"Error: Missing required model files in the directory!")
     exit()
 
 detection_model = tf.keras.models.load_model(detection_model_path)
@@ -58,9 +59,11 @@ def predict_and_visualize(image):
         buf.seek(0)
         plt.close()
         return result, buf
-    except:
+    except Exception as e:
+        print(f"Error during prediction or visualization: {e}")
         return "Error in processing", None
 
+port = int(os.environ.get("PORT", 8080))
 interface = gr.Interface(
     fn=predict_and_visualize,
     inputs=gr.Image(type="pil"),
@@ -69,4 +72,4 @@ interface = gr.Interface(
     description="Upload a medical image to detect if the subject is infected and visualize regions of interest using Grad-CAM."
 )
 
-interface.launch()
+interface.launch(server_name="0.0.0.0", server_port=port)
