@@ -69,4 +69,4 @@ interface = gr.Interface(
     description="Upload a medical image to detect if the subject is infected and visualize regions of interest using Grad-CAM."
 )
 
-interface.launch(server_port=int(os.environ.get("PORT", 8080)), server_name="0.0.0.0")
+interface.launch()
